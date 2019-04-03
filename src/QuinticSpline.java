@@ -41,12 +41,15 @@ public class QuinticSpline {
     public double ddy(double t){ return 20*ay*t*t*t + 12*by*t*t + 6*cy*t + 2*ey; }
     public double dddx(double t){ return 60*ax*t*t + 24*bx*t + 6*cx; }
     public double dddy(double t){ return 60*ay*t*t + 24*by*t + 6*cy; }
-    //public double darc(double t){ return Math.sqrt(Math.pow(dx(t),2) + Math.pow(dy(t),2));}
+    public double dPos(double t){ return Math.sqrt(Math.pow(dx(t),2) + Math.pow(dy(t),2));}
     public double[] getPos(double t){
-        return new double[] {
-                ax*t*t*t*t*t + bx*t*t*t*t + cx*t*t*t + ex*t*t + fx*t + gx,
-                ay*t*t*t*t*t + by*t*t*t*t + cy*t*t*t + ey*t*t + fy*t + gy
-        };
+        return new double[] {getX(t), getY(t)};
+    }
+    public double getX(double t){
+        return ax*t*t*t*t*t + bx*t*t*t*t + cx*t*t*t + ex*t*t + fx*t + gx;
+    }
+    public double getY(double t){
+        return ay*t*t*t*t*t + by*t*t*t*t + cy*t*t*t + ey*t*t + fy*t + gy;
     }
     public double getAngle(double t){
         return Math.toDegrees(Math.atan2(dx(t),dy(t)));
@@ -58,7 +61,7 @@ public class QuinticSpline {
     public double getVelocity(double t){
         return Math.sqrt(Math.pow(dx(t),2)+Math.pow(dy(t),2));
     }
-    public double[] getVals(double t){
+    public double[] get(double t){
         double[] pos = getPos(t);
         return new double[] {pos[0],pos[1], getAngle(t), getVelocity(t)};
     }
