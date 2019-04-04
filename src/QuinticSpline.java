@@ -45,14 +45,14 @@ public class QuinticSpline {
     public double[] getPos(double t){
         return new double[] {getX(t), getY(t)};
     }
-    public double getX(double t){
-        return ax*t*t*t*t*t + bx*t*t*t*t + cx*t*t*t + ex*t*t + fx*t + gx;
-    }
     public double getY(double t){
         return ay*t*t*t*t*t + by*t*t*t*t + cy*t*t*t + ey*t*t + fy*t + gy;
     }
+    public double getX(double t){
+        return ax*t*t*t*t*t + bx*t*t*t*t + cx*t*t*t + ex*t*t + fx*t + gx;
+    }
     public double getAngle(double t){
-        return Math.toDegrees(Math.atan2(dx(t),dy(t)));
+        return Math.toDegrees(Math.atan2(dy(t),dx(t)));
     }
 
     public double[] getVelocityVector(double t){
