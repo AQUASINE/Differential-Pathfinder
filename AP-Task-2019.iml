@@ -17,5 +17,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="xchart-3.5.4" level="project" />
+    <orderEntry type="library" name="jfreechart" level="project" />
+    <orderEntry type="library" name="java" level="project" />
   </component>
 </module>

@@ -1,6 +1,10 @@
 public class QuinticSpline {
+    private final double kIntegralRate = 0.01;
     private double x0, x1, dx0, dx1, ddx0, ddx1, y0, y1, dy0, dy1, ddy0, ddy1;
     private double ax, bx, cx, ex, fx, gx, ay, by, cy, ey, fy, gy;
+    public QuinticSpline(double[] list0, double[] list1){
+        this(list0[0],list0[1],list1[0],list1[1],list0[2],list1[2]);
+    }
     public QuinticSpline(double x0, double y0, double x1, double y1, double deg0, double deg1){
         this.x0 = x0;
         this.x1 = x1;
@@ -41,7 +45,7 @@ public class QuinticSpline {
     public double ddy(double t){ return 20*ay*t*t*t + 12*by*t*t + 6*cy*t + 2*ey; }
     public double dddx(double t){ return 60*ax*t*t + 24*bx*t + 6*cx; }
     public double dddy(double t){ return 60*ay*t*t + 24*by*t + 6*cy; }
-    public double dPos(double t){ return Math.sqrt(Math.pow(dx(t),2) + Math.pow(dy(t),2));}
+    public double dPos(double t){ return Math.sqrt(Math.pow(dx(t),2) + Math.pow(dy(t),2)); }
     public double[] getPos(double t){
         return new double[] {getX(t), getY(t)};
     }
@@ -54,15 +58,16 @@ public class QuinticSpline {
     public double getAngle(double t){
         return Math.toDegrees(Math.atan2(dy(t),dx(t)));
     }
-
-    public double[] getVelocityVector(double t){
-        return new double[] {dx(t),dy(t)};
-    }
-    public double getVelocity(double t){
-        return Math.sqrt(Math.pow(dx(t),2)+Math.pow(dy(t),2));
-    }
-    public double[] get(double t){
-        double[] pos = getPos(t);
-        return new double[] {pos[0],pos[1], getAngle(t), getVelocity(t)};
+    public double arc_length(){
+        double curr_arc = 0;
+        double prev_leng = dPos(0);
+        double curr_leng;
+        for(double r = 0; r <= 1; r+= kIntegralRate){
+            curr_leng = dPos(r);
+            curr_arc += (curr_leng+prev_leng)/2*kIntegralRate;
+            prev_leng = curr_leng;
+        }
+        Debug.print("Arc Length: " + curr_arc, 1);
+        return curr_arc;
     }
 }

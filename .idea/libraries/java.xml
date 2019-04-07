@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="java">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/jar_files/guava-15.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files/log4j-1.2.17.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files/matplotlib4j-0.4.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files/slf4j-api-1.7.7.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/jar_files/slf4j-log4j12-1.7.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
