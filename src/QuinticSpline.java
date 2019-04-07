@@ -46,9 +46,6 @@ public class QuinticSpline {
     public double dddx(double t){ return 60*ax*t*t + 24*bx*t + 6*cx; }
     public double dddy(double t){ return 60*ay*t*t + 24*by*t + 6*cy; }
     public double dPos(double t){ return Math.sqrt(Math.pow(dx(t),2) + Math.pow(dy(t),2)); }
-    public double[] getPos(double t){
-        return new double[] {getX(t), getY(t)};
-    }
     public double getY(double t){
         return ay*t*t*t*t*t + by*t*t*t*t + cy*t*t*t + ey*t*t + fy*t + gy;
     }
@@ -60,12 +57,12 @@ public class QuinticSpline {
     }
     public double arc_length(){
         double curr_arc = 0;
-        double prev_leng = dPos(0);
-        double curr_leng;
+        double prev_length = dPos(0);
+        double curr_length;
         for(double r = 0; r <= 1; r+= kIntegralRate){
-            curr_leng = dPos(r);
-            curr_arc += (curr_leng+prev_leng)/2*kIntegralRate;
-            prev_leng = curr_leng;
+            curr_length = dPos(r);
+            curr_arc += (curr_length+prev_length)/2*kIntegralRate;
+            prev_length = curr_length;
         }
         Debug.print("Arc Length: " + curr_arc, 1);
         return curr_arc;
