@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Debug{
-    public static final int kDebugLevel = 4;
+    public static final int kDebugLevel = 5;
     public static final boolean kGraphsEnabled = true;
     public static void print(Object text, int debugLevel){
         if (debugLevel <= kDebugLevel){
