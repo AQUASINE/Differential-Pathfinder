@@ -1,3 +1,5 @@
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class Path {
@@ -5,9 +7,9 @@ public class Path {
     ArrayList<QuinticSpline> path_splines;
     ArrayList<Double>[] velocity_profile;
     double total_length = 0;
-    double accel_time, accel_dist, decel_time, decel_dist, max_v_dist, max_v_time, total_time;
 
 
+    @NotNull
     public Path(double[][] list){
         path_splines = new ArrayList<>();
         this.list = list;
@@ -22,6 +24,7 @@ public class Path {
     }
 
     public ArrayList<Double>[] generate_motion_profile(double max_accel, double max_v, double max_decel){
+        double accel_time, accel_dist, decel_time, decel_dist, max_v_dist, max_v_time, total_time;
         ArrayList<Double> profile = new ArrayList<>();
         ArrayList<Double> time = new ArrayList<>();
 
@@ -31,6 +34,7 @@ public class Path {
         decel_time = -max_v/(max_decel);
         decel_dist = 0.5*decel_time*decel_time*-max_decel;
 
+        //TODO: FIX THIS PART
         if (total_length-(accel_dist + decel_dist) < 0){
             accel_dist = total_length/2;
             decel_dist = total_length/2;

@@ -8,7 +8,10 @@ public class Main {
         double[][] list = {
                 {2,3,0},
                 {4,8,30},
-                {7,2,90}
+                {7,2,90},
+                {5,10,45},
+                {4,1,60},
+                {5,5,90}
         };
 
         Path path = new Path(list);
