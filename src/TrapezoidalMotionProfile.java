@@ -21,7 +21,9 @@ public class TrapezoidalMotionProfile {
         }
 
         public Constraints(double max_velocity, double max_acceleration){
+            //velocity: m/s
         this.max_velocity = max_velocity;
+            //acceleration: m/s^2
         this.max_acceleration = max_acceleration;
         }
     }
@@ -44,7 +46,28 @@ public class TrapezoidalMotionProfile {
 
     public TrapezoidalMotionProfile (State goal, State initial, Constraints constraints){
         m_direction = shouldFlipAccel(initial, goal, constraints) ? 1 : -1;
+        m_constraints = constraints;
+        m_initial = direction(initial);
+        m_goal = direction(goal);
+        double cutoffBegin = m_initial.velocity / m_constraints.max_acceleration;
+        double cutoffDistBegin = m_initial.velocity;
+            //seconds
+        double cutoffEnd = m_goal.velocity / m_constraints.max_acceleration;
+        double cutoffDistEnd = cutoffEnd * cutoffEnd * m_constraints.max_acceleration;
 
+        double fullTrapezoidDist = cutoffDistBegin + (m_goal.position - m_initial.position) + cutoffDistEnd;
+
+        double accelerationTime = m_constraints.max_velocity / m_constraints.max_acceleration;
+        double fullSpeedDist = fullTrapezoidDist - accelerationTime * accelerationTime * m_constraints.max_acceleration;
+
+        if (fullSpeedDist < 0) {
+            accelerationTime = Math.sqrt(fullTrapezoidDist / m_constraints.max_acceleration);
+            fullSpeedDist = 0;
+        }
+
+        m_endAccel = accelerationTime - cutoffBegin;
+        m_endFullSpeed = m_endAccel + fullSpeedDist / m_constraints.max_velocity;
+        m_endDecel = m_endFullSpeed + accelerationTime - cutoffEnd;
     }
 
     private boolean shouldFlipAccel(State initial, State goal, Constraints constraints){

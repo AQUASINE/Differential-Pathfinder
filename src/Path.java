@@ -1,3 +1,5 @@
+
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -7,7 +9,6 @@ public class Path {
     ArrayList<QuinticSpline> path_splines;
     ArrayList<Double>[] velocity_profile;
     double total_length = 0;
-
 
     @NotNull
     public Path(double[][] list){
