@@ -1,15 +1,10 @@
+package Project;
 
 import com.github.sh0nk.matplotlib4j.Plot;
 import com.github.sh0nk.matplotlib4j.*;
-import com.github.sh0nk.matplotlib4j.builder.PlotBuilder;
-import org.knowm.xchart.QuickChart;
-import org.knowm.xchart.SwingWrapper;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYSeries;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class PathChart {
 
