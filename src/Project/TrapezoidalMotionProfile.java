@@ -14,7 +14,6 @@ public class TrapezoidalMotionProfile {
     private double m_endDecel;
 
     public static class Constraints{
-
         @SuppressWarnings("MemberName")
         public double max_velocity;
         @SuppressWarnings("MemberName")
@@ -49,10 +48,13 @@ public class TrapezoidalMotionProfile {
 
 
     public TrapezoidalMotionProfile (State initial, State goal, Constraints constraints){
+        Debug.print("constructor", 5);
         m_direction = shouldFlipAccel(initial, goal, constraints) ? -1 : 1;
         m_constraints = constraints;
         m_initial = direction(initial);
+        Debug.print("m_initial", 5);
         m_goal = direction(goal);
+        Debug.print("m_goal", 5);
         double cutoffBegin = m_initial.velocity / m_constraints.max_acceleration;
         double cutoffDistBegin = m_initial.velocity;
             //seconds
@@ -114,11 +116,11 @@ public class TrapezoidalMotionProfile {
 
         endAccel = Math.max(endAccel, 0);
         endFullSpeed = Math.max(endFullSpeed, 0);
-        double endDeccel = m_endDecel - endAccel - endFullSpeed;
-        endDeccel = Math.max(endDeccel, 0);
+        double endDecel = m_endDecel - endAccel - endFullSpeed;
+        endDecel = Math.max(endDecel, 0);
 
         double acceleration = m_constraints.max_acceleration;
-        double decceleration = -m_constraints.max_acceleration;
+        double deceleration = -m_constraints.max_acceleration;
 
         double distToTarget = Math.abs(target - position);
 
@@ -128,51 +130,55 @@ public class TrapezoidalMotionProfile {
 
         double accelDist = velocity * endAccel + 0.5 * acceleration * endAccel * endAccel;
 
-        double deccelVelocity;
+        double decelVelocity;
         if (endAccel > 0) {
-            deccelVelocity = Math.sqrt(Math.abs(velocity * velocity + 2 * acceleration * accelDist));
+            decelVelocity = Math.sqrt(Math.abs(velocity * velocity + 2 * acceleration * accelDist));
         } else {
-            deccelVelocity = velocity;
+            decelVelocity = velocity;
         }
 
-        double deccelDist = deccelVelocity * endDeccel + 0.5 * decceleration * endDeccel * endDeccel;
+        double decelDist = decelVelocity * endDecel + 0.5 * deceleration * endDecel * endDecel;
 
-        deccelDist = Math.max(deccelDist, 0);
+        decelDist = Math.max(decelDist, 0);
 
         double fullSpeedDist = m_constraints.max_velocity * endFullSpeed;
 
         if (accelDist > distToTarget) {
             accelDist = distToTarget;
             fullSpeedDist = 0;
-            deccelDist = 0;
+            decelDist = 0;
         } else if (accelDist + fullSpeedDist > distToTarget) {
             fullSpeedDist = distToTarget - accelDist;
-            deccelDist = 0;
+            decelDist = 0;
         } else {
-            deccelDist = distToTarget - fullSpeedDist - accelDist;
+            decelDist = distToTarget - fullSpeedDist - accelDist;
         }
 
         double accelTime = (-velocity + Math.sqrt(Math.abs(velocity * velocity + 2 * acceleration
                 * accelDist))) / acceleration;
 
-        double deccelTime = (-deccelVelocity + Math.sqrt(Math.abs(deccelVelocity * deccelVelocity
-                + 2 * decceleration * deccelDist))) / decceleration;
+        double decelTime = (-decelVelocity + Math.sqrt(Math.abs(decelVelocity * decelVelocity
+                + 2 * deceleration * decelDist))) / deceleration;
 
         double fullSpeedTime = fullSpeedDist / m_constraints.max_velocity;
 
-        return accelTime + fullSpeedTime + deccelTime;
+        return accelTime + fullSpeedTime + decelTime;
     }
 
     @SuppressWarnings("ParameterName")
     public State calculate(double t) {
-        State result = m_initial;
+        State result = new State();
+        result.velocity = m_initial.velocity;
+        result.position = m_initial.position;
 
+        Debug.print("m_initial: " + this.m_initial.velocity, 3);
         if (t < m_endAccel) {
             result.velocity = t * m_constraints.max_acceleration;
             result.position = (m_initial.velocity + t * m_constraints.max_acceleration / 2.0) * t;
+
         } else if (t < m_endFullSpeed) {
             result.velocity = m_constraints.max_velocity;
-            result.position = (m_initial.velocity + m_endAccel * m_constraints.max_acceleration
+            result.position = (m_endAccel * m_constraints.max_acceleration
                     / 2.0) * m_endAccel + m_constraints.max_velocity * (t - m_endAccel);
         } else if (t <= m_endDecel) {
             result.velocity = m_goal.velocity + (m_endDecel - t) * m_constraints.max_acceleration;
@@ -185,11 +191,19 @@ public class TrapezoidalMotionProfile {
 
         return direction(result);
     }
+
     private boolean shouldFlipAccel(State initial, State goal, Constraints constraints){
         double velocityChange = goal.velocity - initial.velocity;
         double positionChange = goal.position - initial.position;
         double t = Math.abs(velocityChange) / constraints.max_acceleration;
+        try {
+            Debug.print("m_initial: " + m_initial.velocity, 5);
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+        }
         return t * (velocityChange / 2 + initial.velocity) > positionChange;
+
     }
 
     public State direction(State state){

@@ -16,6 +16,7 @@ public class Main {
 
         //Path path = new Path(list);
         //PathChart chart = new PathChart(path);
-        TrapezoidalMotionProfileTest test = new TrapezoidalMotionProfileTest(new TrapezoidalMotionProfile(0,19,2,4));
+        TrapezoidalMotionProfile profile = new TrapezoidalMotionProfile(2,-40,2,4);
+        TrapezoidalMotionProfileTest test = new TrapezoidalMotionProfileTest(profile);
     }
 }

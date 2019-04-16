@@ -22,6 +22,7 @@ public class TrapezoidalMotionProfileTest {
         for (double i = 0; i<=trapezoid.totalTime(); i+= Constants.kSampleRate){
             m_dataX.add(i);
             m_dataY.add(trapezoid.calculate(i).position);
+            Debug.print(trapezoid.calculate(i).position, 5);
         }
 
         Debug.print("Loading Chart...",2);
