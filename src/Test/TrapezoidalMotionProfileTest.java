@@ -8,21 +8,29 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class TrapezoidalMotionProfileTest {
+
+    ArrayList<Double> m_dataX;
+    ArrayList<Double> m_dataY;
+
     Plot plt = Plot.create();
-    ArrayList<Double> dataX = new ArrayList<>();
-    ArrayList<Double> dataY = new ArrayList<>();
     public TrapezoidalMotionProfileTest(TrapezoidalMotionProfile trapezoid){
+
+        m_dataX = new ArrayList<>();
+        m_dataY = new ArrayList<>();
+
         Debug.print("MP Total Time:" + trapezoid.totalTime(),3);
         for (double i = 0; i<=trapezoid.totalTime(); i+= Constants.kSampleRate){
-            dataX.add(i);
-            dataY.add(trapezoid.calculate(i).velocity);
+            m_dataX.add(i);
+            m_dataY.add(trapezoid.calculate(i).position);
         }
+
         Debug.print("Loading Chart...",2);
         plt.plot()
-                .add(dataX,dataY);
+                .add(m_dataX,m_dataY);
         try{
             plt.show();
         }
+
         catch (IOException | PythonExecutionException e){
             e.printStackTrace();
         }

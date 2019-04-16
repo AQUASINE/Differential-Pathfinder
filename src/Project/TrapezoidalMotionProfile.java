@@ -14,6 +14,7 @@ public class TrapezoidalMotionProfile {
     private double m_endDecel;
 
     public static class Constraints{
+
         @SuppressWarnings("MemberName")
         public double max_velocity;
         @SuppressWarnings("MemberName")
@@ -48,7 +49,7 @@ public class TrapezoidalMotionProfile {
 
 
     public TrapezoidalMotionProfile (State initial, State goal, Constraints constraints){
-        m_direction = shouldFlipAccel(initial, goal, constraints) ? 1 : -1;
+        m_direction = shouldFlipAccel(initial, goal, constraints) ? -1 : 1;
         m_constraints = constraints;
         m_initial = direction(initial);
         m_goal = direction(goal);
@@ -85,7 +86,7 @@ public class TrapezoidalMotionProfile {
     }
 
     public TrapezoidalMotionProfile(double start_velocity, double start_position, double end_velocity, double end_position, double max_acceleration, double max_velocity){
-        this(new State(start_position,start_velocity), new State(end_position, end_velocity), new Constraints(max_velocity, max_acceleration));
+        this(new State(start_position, start_velocity), new State(end_position, end_velocity), new Constraints(max_velocity, max_acceleration));
     }
 
     public TrapezoidalMotionProfile(double end_velocity, double end_position, double max_acceleration, double max_velocity){
@@ -167,11 +168,11 @@ public class TrapezoidalMotionProfile {
         State result = m_initial;
 
         if (t < m_endAccel) {
-            result.velocity += t * m_constraints.max_acceleration;
-            result.position += (m_initial.velocity + t * m_constraints.max_acceleration / 2.0) * t;
+            result.velocity = t * m_constraints.max_acceleration;
+            result.position = (m_initial.velocity + t * m_constraints.max_acceleration / 2.0) * t;
         } else if (t < m_endFullSpeed) {
             result.velocity = m_constraints.max_velocity;
-            result.position += (m_initial.velocity + m_endAccel * m_constraints.max_acceleration
+            result.position = (m_initial.velocity + m_endAccel * m_constraints.max_acceleration
                     / 2.0) * m_endAccel + m_constraints.max_velocity * (t - m_endAccel);
         } else if (t <= m_endDecel) {
             result.velocity = m_goal.velocity + (m_endDecel - t) * m_constraints.max_acceleration;
