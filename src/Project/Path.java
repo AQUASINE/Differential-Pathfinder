@@ -27,6 +27,9 @@ public class Path {
     public double getY(double t){
         return getYfromSplines(t*(double)m_splineList.size());
     }
+    public double getAngle(double t){
+        return getAngleFromSplines(t*(double)m_splineList.size());
+    }
     public double getXfromSplines(double t){
          int i = 0;
         if (t>1){
@@ -55,7 +58,7 @@ public class Path {
             return -1;
         }
     }
-    public double getAngle(double t){
+    public double getAngleFromSplines(double t){
         int i = 0;
         if (t>1){
             i = (int)t;

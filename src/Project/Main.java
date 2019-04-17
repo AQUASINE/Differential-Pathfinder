@@ -1,5 +1,6 @@
 package Project;
 
+import Test.PathChart;
 import com.github.sh0nk.matplotlib4j.Plot;
 import com.github.sh0nk.matplotlib4j.PythonExecutionException;
 
@@ -16,17 +17,21 @@ public class Main {
         };
 
         Path path = new Path(list);
-        PathChart chart = new PathChart(path);
         TrapezoidalMotionProfile profile = new TrapezoidalMotionProfile(0, path.total_length, Constants.kMax_accel, Constants.kMax_v);
         ArrayList<Double> m_dataX = new ArrayList<>();
         ArrayList<Double> m_dataY = new ArrayList<>();
+        ArrayList<Double> m_dataV = new ArrayList<>();
+        ArrayList<Double> m_dataAngle = new ArrayList<>();
         Plot plt = Plot.create();
         double t = 0;
         while(!profile.isFinished(t)){
-            m_dataX.add(path.getX(profile.calculate(t).position/path.total_length));
-            m_dataY.add(path.getY(profile.calculate(t).position/path.total_length));
+            TrapezoidalMotionProfile.State curr_state = profile.calculate(t);
+            m_dataX.add(path.getX(curr_state.position/path.total_length));
+            m_dataY.add(path.getY(curr_state.position/path.total_length));
+            m_dataV.add(curr_state.velocity);
+            m_dataAngle.add(path.getAngle(curr_state.position/path.total_length));
             t += Constants.kSampleRate;
-            Debug.print(profile.calculate(t).position*Math.cos(Math.toRadians(path.getAngle(t))),0);
+            Debug.print(profile.calculate(t).position*Math.cos(Math.toRadians(path.getAngleFromSplines(t))),0);
         }
         plt.plot()
                 .add(m_dataX,m_dataY);
