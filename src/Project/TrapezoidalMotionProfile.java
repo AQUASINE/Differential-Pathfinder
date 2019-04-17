@@ -44,6 +44,10 @@ public class TrapezoidalMotionProfile {
             this.velocity = velocity;
 
         }
+        State(State state){
+            this.position = state.position;
+            this.velocity = state.velocity;
+        }
     }
 
 
@@ -55,8 +59,10 @@ public class TrapezoidalMotionProfile {
         Debug.print("m_initial", 5);
         m_goal = direction(goal);
         Debug.print("m_goal", 5);
+            //seconds
         double cutoffBegin = m_initial.velocity / m_constraints.max_acceleration;
-        double cutoffDistBegin = m_initial.velocity;
+            //m/s
+        double cutoffDistBegin = cutoffBegin * cutoffBegin * m_initial.velocity;
             //seconds
         double cutoffEnd = m_goal.velocity / m_constraints.max_acceleration;
         double cutoffDistEnd = cutoffEnd * cutoffEnd * m_constraints.max_acceleration;
@@ -86,14 +92,18 @@ public class TrapezoidalMotionProfile {
     public TrapezoidalMotionProfile(State goal, Constraints constraints) {
         this(new State(0,0), goal, constraints);
     }
-
+/*
+    TODO: FIX THIS
     public TrapezoidalMotionProfile(double start_velocity, double start_position, double end_velocity, double end_position, double max_acceleration, double max_velocity){
         this(new State(start_position, start_velocity), new State(end_position, end_velocity), new Constraints(max_velocity, max_acceleration));
     }
 
-    public TrapezoidalMotionProfile(double end_velocity, double end_position, double max_acceleration, double max_velocity){
-        this(new State(end_position, end_velocity), new Constraints(max_velocity, max_acceleration));
+ */
+
+    public TrapezoidalMotionProfile(double start_position, double end_position, double max_acceleration, double max_velocity){
+        this(new State(end_position, 0), new Constraints(max_velocity, max_acceleration));
     }
+
     @SuppressWarnings("ParameterName")
     public boolean isFinished(double t) {
         return t >= totalTime();
@@ -116,8 +126,6 @@ public class TrapezoidalMotionProfile {
 
         endAccel = Math.max(endAccel, 0);
         endFullSpeed = Math.max(endFullSpeed, 0);
-        double endDecel = m_endDecel - endAccel - endFullSpeed;
-        endDecel = Math.max(endDecel, 0);
 
         double acceleration = m_constraints.max_acceleration;
         double deceleration = -m_constraints.max_acceleration;
@@ -137,10 +145,7 @@ public class TrapezoidalMotionProfile {
             decelVelocity = velocity;
         }
 
-        double decelDist = decelVelocity * endDecel + 0.5 * deceleration * endDecel * endDecel;
-
-        decelDist = Math.max(decelDist, 0);
-
+        double decelDist;
         double fullSpeedDist = m_constraints.max_velocity * endFullSpeed;
 
         if (accelDist > distToTarget) {
@@ -154,12 +159,8 @@ public class TrapezoidalMotionProfile {
             decelDist = distToTarget - fullSpeedDist - accelDist;
         }
 
-        double accelTime = (-velocity + Math.sqrt(Math.abs(velocity * velocity + 2 * acceleration
-                * accelDist))) / acceleration;
-
-        double decelTime = (-decelVelocity + Math.sqrt(Math.abs(decelVelocity * decelVelocity
-                + 2 * deceleration * decelDist))) / deceleration;
-
+        double accelTime = (-velocity + Math.sqrt(Math.abs(velocity * velocity + 2 * acceleration * accelDist))) / acceleration;
+        double decelTime = (-decelVelocity + Math.sqrt(Math.abs(decelVelocity * decelVelocity + 2 * deceleration * decelDist))) / deceleration;
         double fullSpeedTime = fullSpeedDist / m_constraints.max_velocity;
 
         return accelTime + fullSpeedTime + decelTime;
@@ -167,24 +168,26 @@ public class TrapezoidalMotionProfile {
 
     @SuppressWarnings("ParameterName")
     public State calculate(double t) {
-        State result = new State();
-        result.velocity = m_initial.velocity;
-        result.position = m_initial.position;
-
+        State result = new State(m_initial);
+        double timeLeft = m_endDecel - t;
         Debug.print("m_initial: " + this.m_initial.velocity, 3);
         if (t < m_endAccel) {
-            result.velocity = t * m_constraints.max_acceleration;
+            result.velocity = m_initial.velocity + t * m_constraints.max_acceleration;
             result.position = (m_initial.velocity + t * m_constraints.max_acceleration / 2.0) * t;
 
         } else if (t < m_endFullSpeed) {
             result.velocity = m_constraints.max_velocity;
-            result.position = (m_endAccel * m_constraints.max_acceleration
+            result.position = (m_initial.velocity + m_endAccel * m_constraints.max_acceleration
                     / 2.0) * m_endAccel + m_constraints.max_velocity * (t - m_endAccel);
         } else if (t <= m_endDecel) {
-            result.velocity = m_goal.velocity + (m_endDecel - t) * m_constraints.max_acceleration;
-            double timeLeft = m_endDecel - t;
+            result.velocity = m_goal.velocity + timeLeft * m_constraints.max_acceleration;
             result.position = m_goal.position - (m_goal.velocity + timeLeft
                     * m_constraints.max_acceleration / 2.0) * timeLeft;
+           /* result.position = (m_initial.velocity + m_endAccel * m_constraints.max_acceleration
+                    / 2.0) * m_endAccel + (m_constraints.max_velocity * (m_endFullSpeed - m_endAccel))
+                    + (m_constraints.max_velocity - m_constraints.max_acceleration / 2.0 * timeLeft) * timeLeft;
+
+            */
         } else {
             result = m_goal;
         }

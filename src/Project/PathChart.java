@@ -13,9 +13,9 @@ public class PathChart {
     ArrayList<Double> dataY = new ArrayList<>();
     public PathChart(Path path){
         for (double i = 0; i<=path.list.length-1; i+=Constants.kSampleRate){
-            dataX.add(path.getX(i));
-            dataY.add(path.getY(i));
-            Debug.print(path.getX(i),3);
+            dataX.add(path.getXfromSplines(i));
+            dataY.add(path.getYfromSplines(i));
+            Debug.print(path.getXfromSplines(i),3);
         }
         Debug.print("Loading Chart...",2);
         plt.plot()

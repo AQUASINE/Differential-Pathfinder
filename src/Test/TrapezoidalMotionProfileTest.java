@@ -18,11 +18,10 @@ public class TrapezoidalMotionProfileTest {
         m_dataX = new ArrayList<>();
         m_dataY = new ArrayList<>();
 
-        Debug.print("MP Total Time:" + trapezoid.totalTime(),3);
+        Debug.print("MP Total Time: " + trapezoid.totalTime(),3);
         for (double i = 0; i<=trapezoid.totalTime(); i+= Constants.kSampleRate){
             m_dataX.add(i);
-            m_dataY.add(trapezoid.calculate(i).position);
-            Debug.print(trapezoid.calculate(i).position, 5);
+            m_dataY.add(trapezoid.calculate(i).velocity);
         }
 
         Debug.print("Loading Chart...",2);
@@ -31,7 +30,6 @@ public class TrapezoidalMotionProfileTest {
         try{
             plt.show();
         }
-
         catch (IOException | PythonExecutionException e){
             e.printStackTrace();
         }
