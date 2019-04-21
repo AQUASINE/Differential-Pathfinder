@@ -47,7 +47,7 @@ public class QuinticSpline {
     public double ddy(double t){ return 20*ay*t*t*t + 12*by*t*t + 6*cy*t + 2*ey; }
     public double dddx(double t){ return 60*ax*t*t + 24*bx*t + 6*cx; }
     public double dddy(double t){ return 60*ay*t*t + 24*by*t + 6*cy; }
-    public double dPos(double t){ return Math.sqrt(Math.pow(dx(t),2) + Math.pow(dy(t),2)); }
+    public double dPos(double t){ return Math.sqrt(Math.pow(dx (t),2) + Math.pow(dy(t),2)); }
     public double getY(double t){
         return ay*t*t*t*t*t + by*t*t*t*t + cy*t*t*t + ey*t*t + fy*t + gy;
     }
@@ -55,8 +55,13 @@ public class QuinticSpline {
         return ax*t*t*t*t*t + bx*t*t*t*t + cx*t*t*t + ex*t*t + fx*t + gx;
     }
     public double getAngle(double t){
-        return Math.toDegrees(Math.atan2(dy(t),dx(t)));
+        double angle = Math.toDegrees(Math.atan2(dx(t),dy(t)));
+        if (angle < 0){
+        //angle += 180;
+        }
+        return angle;
     }
+
     public double arc_length(){
         double curr_arc = 0;
         double prev_length = dPos(0);

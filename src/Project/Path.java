@@ -30,6 +30,7 @@ public class Path {
     public double getAngle(double t){
         return getAngleFromSplines(t*(double)m_splineList.size());
     }
+
     public double getXfromSplines(double t){
          int i = 0;
         if (t>1){

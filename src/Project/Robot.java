@@ -8,19 +8,15 @@ public class Robot {
         this.max_v = max_v;
         this.max_a = max_a;
     }
-    public void rotate(double angle0, double angle1){
-        if (angle1>angle0){
-            v_r = curr_v;
-            v_l = curr_v-base*(angle1-angle0);
-            curr_v = 0.5*(v_r+v_l);
-        }
-        else if(angle0<angle1){
-            v_l = curr_v;
-            v_r = v_r-base*(angle1-angle0);
-        }
-        else{
-            v_r = curr_v;
-            v_l = curr_v;
-        }
+    public Double[] wheel_v(double v, double w) {
+        double v_l = wheel_v_l(v, w);
+        double v_r = wheel_v_r(v, w);
+        return new Double[] {v_l, v_r};
+    }
+    public double wheel_v_l(double v, double w){
+        return v - w * base / 2;
+    }
+    public double wheel_v_r(double v, double w){
+        return v + w * base / 2;
     }
 }
