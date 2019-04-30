@@ -1,5 +1,10 @@
 package Project;
 
+/*
+This class represents a QuinticSpline path between two points generated from a set of [x,y,theta] values.
+A quintic spline allows to create a smooth, differentiable, and continuous parametric path that the [x,y,theta] values
+of between the two points can be interpolated from.
+ */
 public class QuinticSpline {
     private final double kIntegralRate = 0.01;
     private double x0, x1, dx0, dx1, ddx0, ddx1, y0, y1, dy0, dy1, ddy0, ddy1;
@@ -20,7 +25,7 @@ public class QuinticSpline {
         this.dy1 = Math.cos(Math.toRadians(deg1));
         this.ddy0 = 0;
         this.ddy1 = 0;
-        double m_multiplier = 1 + Math.sqrt(Math.pow(this.x0-this.x1,2)+Math.pow(this.y0-this.y1,2));
+        double m_multiplier = 1 + Math.sqrt(Math.pow(this.x0-this.x1,2)+Math.pow(this.y0-this.y1,2))*2;
         this.dx0 *= m_multiplier;
         this.dx1 *= m_multiplier;
         this.dy0 *= m_multiplier;
@@ -47,7 +52,7 @@ public class QuinticSpline {
     public double ddy(double t){ return 20*ay*t*t*t + 12*by*t*t + 6*cy*t + 2*ey; }
     public double dddx(double t){ return 60*ax*t*t + 24*bx*t + 6*cx; }
     public double dddy(double t){ return 60*ay*t*t + 24*by*t + 6*cy; }
-    public double dPos(double t){ return Math.sqrt(Math.pow(dx (t),2) + Math.pow(dy(t),2)); }
+    public double dPos(double t){ return Math.sqrt(Math.pow(dx(t),2) + Math.pow(dy(t),2)); }
     public double getY(double t){
         return ay*t*t*t*t*t + by*t*t*t*t + cy*t*t*t + ey*t*t + fy*t + gy;
     }
@@ -55,11 +60,7 @@ public class QuinticSpline {
         return ax*t*t*t*t*t + bx*t*t*t*t + cx*t*t*t + ex*t*t + fx*t + gx;
     }
     public double getAngle(double t){
-        double angle = Math.toDegrees(Math.atan2(dx(t),dy(t)));
-        if (angle < 0){
-        //angle += 180;
-        }
-        return angle;
+        return Math.toDegrees(Math.atan2(dy(t),dx(t)));
     }
 
     public double arc_length(){

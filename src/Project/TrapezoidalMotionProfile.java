@@ -1,7 +1,5 @@
 package Project;
-
-import com.google.common.collect.Constraint;
-
+//credit to Tyler from WPILib for help with this
 public class TrapezoidalMotionProfile {
     private int m_direction;
 
@@ -15,9 +13,9 @@ public class TrapezoidalMotionProfile {
 
     public static class Constraints{
         @SuppressWarnings("MemberName")
-        public double max_velocity;
+        double max_velocity;
         @SuppressWarnings("MemberName")
-        public double max_acceleration;
+        double max_acceleration;
 
         public Constraints(){
         }
@@ -172,14 +170,17 @@ public class TrapezoidalMotionProfile {
         double timeLeft = m_endDecel - t;
         Debug.print("m_initial: " + this.m_initial.velocity, 3);
         if (t < m_endAccel) {
+            //calculate accel State
             result.velocity = m_initial.velocity + t * m_constraints.max_acceleration;
             result.position = (m_initial.velocity + t * m_constraints.max_acceleration / 2.0) * t;
 
         } else if (t < m_endFullSpeed) {
+            //calculate full speed State
             result.velocity = m_constraints.max_velocity;
             result.position = (m_initial.velocity + m_endAccel * m_constraints.max_acceleration
                     / 2.0) * m_endAccel + m_constraints.max_velocity * (t - m_endAccel);
         } else if (t <= m_endDecel) {
+            //calculate decel State
             result.velocity = m_goal.velocity + timeLeft * m_constraints.max_acceleration;
             result.position = m_goal.position - (m_goal.velocity + timeLeft
                     * m_constraints.max_acceleration / 2.0) * timeLeft;
@@ -203,7 +204,7 @@ public class TrapezoidalMotionProfile {
             Debug.print("m_initial: " + m_initial.velocity, 5);
         }
         catch (NullPointerException e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         return t * (velocityChange / 2 + initial.velocity) > positionChange;
 
