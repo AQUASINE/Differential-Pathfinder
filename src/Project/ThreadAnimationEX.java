@@ -5,33 +5,24 @@ import javax.swing.JFrame;
 
 public class ThreadAnimationEX extends JFrame {
 
-    public ThreadAnimationEX() {
-
-        initUI();
+    public ThreadAnimationEX(DrawableRobot[] robots, double[][] points) {
+        initUI(robots, points);
     }
 
-    private void initUI() {
-
-        add(new Board());
-
+    private void initUI(DrawableRobot[] robots, double[][] points) {
+        add(new Board(robots, points));
         setResizable(false);
         pack();
 
-        setTitle("AP Task: Robot Driving Simulator");
+        setTitle("Robot Driving Simulation");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public static void main(String[] args) {
 
+    public static void start(DrawableRobot[] robots, double[][] points){
         EventQueue.invokeLater(() -> {
-            JFrame ex = new ThreadAnimationEX();
-            ex.setVisible(true);
-        });
-    }
-    public static void start(){
-        EventQueue.invokeLater(() -> {
-            JFrame ex = new ThreadAnimationEX();
+            JFrame ex = new ThreadAnimationEX(robots, points);
             ex.setVisible(true);
         });
     }

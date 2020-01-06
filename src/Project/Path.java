@@ -6,13 +6,13 @@ import java.util.ArrayList;
 
 public class Path {
     public double[][] list;
-    ArrayList<QuinticSpline> m_splineList;
+    private ArrayList<QuinticSpline> m_splineList;
     double total_length = 0;
 
     @NotNull
     public Path(double[][] list){
-        m_splineList = new ArrayList<>();
         this.list = list;
+        m_splineList = new ArrayList<>();
         Debug.print("Max Index: " + (list.length-1), 2);
         for (int i = 0; i <= list.length-2; i++){
             m_splineList.add(new QuinticSpline(list[i], list[i+1]));

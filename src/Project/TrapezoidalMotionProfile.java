@@ -12,9 +12,7 @@ public class TrapezoidalMotionProfile {
     private double m_endDecel;
 
     public static class Constraints{
-        @SuppressWarnings("MemberName")
         double max_velocity;
-        @SuppressWarnings("MemberName")
         double max_acceleration;
 
         public Constraints(){
@@ -28,13 +26,10 @@ public class TrapezoidalMotionProfile {
         }
     }
     public static class State{
-        @SuppressWarnings("MemberName")
         public double position;
-        @SuppressWarnings("MemberName")
         public double velocity;
 
-        public State(){
-        }
+        public State() {}
 
         public State(double position, double velocity){
 
