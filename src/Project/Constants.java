@@ -10,7 +10,7 @@ public class Constants {
     public final static double kSampleRate = 0.01;
     public final static double kTimeStep
             //s
-            = 0.05;
+            = 0.01;
 
     public final static double kBaseWidth
             //m

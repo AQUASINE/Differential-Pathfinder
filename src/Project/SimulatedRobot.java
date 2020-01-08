@@ -1,8 +1,9 @@
 package Project;
 
 public class SimulatedRobot {
+
     public MotionDataManager feedforward, output;
-    private static double dt = Constants.kSampleRate;
+    private static double dt = Constants.kTimeStep;
     private double robotX, robotY, robotV, robotLV, robotRV, robotAngle, robotAngularV;
     private double motorMaxV, baseWidth;
 
@@ -22,8 +23,11 @@ public class SimulatedRobot {
         for(int i = 0; i < feedforward.size(); i++){
             setLeft(feedforward.getLWheelV(i));
             setRight(feedforward.getRWheelV(i));
+            robotAngularV = feedforward.getAngularV(i);
+            //robotV = feedforward.getV(i);
             calculateVelocities();
             move();
+            System.out.println(feedforward.getAngle(i) + " " + robotAngle);
             output.addX(robotX);
             output.addY(robotY);
             output.addV(robotV);
@@ -56,12 +60,13 @@ public class SimulatedRobot {
     }
 
     private void calculateVelocities() {
-        robotAngularV = (robotRV - robotLV) / baseWidth;
-        robotV = (robotRV + robotLV) / 2;
+        //robotAngularV = Math.toDegrees((robotRV - robotLV) / baseWidth); //deg/s TODO: Something wrong here
+        robotV = (robotRV + robotLV) / 2; //m/s
     }
     private void move(){
-        robotAngle += Math.toDegrees(robotAngularV * dt);
-        robotX += robotV * Math.cos(Math.toRadians(robotAngle)) * dt;
-        robotY += robotV * Math.sin(Math.toRadians(robotAngle)) * dt;
+        //TODO: Something wrong here too
+        robotAngle += robotAngularV * dt; //deg/s * s
+        robotX += robotV * Math.cos(Math.toRadians(robotAngle)) * dt; //m/s * s
+        robotY += robotV * Math.sin(Math.toRadians(robotAngle)) * dt; //m/s * s
     }
 }

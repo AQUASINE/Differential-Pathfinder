@@ -47,7 +47,7 @@ public class Main {
 
         double last_value = 0;
         double wraparound_adder = 0;
-        for(double t = 0; !profile.isFinished(t); t += Constants.kSampleRate) {
+        for(double t = 0; !profile.isFinished(t); t += Constants.kTimeStep) {
             TrapezoidalMotionProfile.State curr_state = profile.calculate(t);
             double distanceFraction = curr_state.position / path.total_length;
             double curr_value = path.getAngle(distanceFraction);
